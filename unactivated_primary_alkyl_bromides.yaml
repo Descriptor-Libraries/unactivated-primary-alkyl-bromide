@@ -1,0 +1,78 @@
+# Configuration for Unactivated Primary Alkyl Bromides library
+# CSV files located at: /mnt/largestore1/janash/ccas/Unactivated_Primary_Alkyl_Bromides_MolSSI_Library_Files
+# Mounted as /scratch in container
+
+container_name: descriptor-libraries-descriptor_database-1
+database:
+  name: unactivated_primary_alkyl_bromides
+  drop_database: false
+
+extensions:
+  - cube
+  - rdkit
+
+property_sets:
+  dft:
+    table_name: public.dft_data
+    columns:
+      - name: molecule_id
+        type: text
+        nullable: false
+      - name: property
+        type: text
+        nullable: false
+      - name: max
+        type: numeric
+      - name: min
+        type: numeric
+      - name: low_e
+        type: numeric
+        csv: low_E
+      - name: boltz
+        type: numeric
+        csv: Boltz
+    primary_key:
+      - molecule_id
+      - property
+    molecule_fk: true
+    indexes:
+      - "CREATE INDEX IF NOT EXISTS dft_data_property_idx ON {table} USING btree (property);"
+
+schema_files:
+  - /scratch/schema_dump.sql
+
+tables:
+  - name: public.molecule
+    csv_path: /scratch/Unactivated_Primary_Alkyl_Bromides_MolSSI_Library_Files/molecule.csv
+    columns:
+      - molecule_id
+      - smiles
+      - cas
+      - canonical_smiles
+      - umap
+      - pca
+    post_sql:
+      - "UPDATE public.molecule SET mol = mol_from_smiles(smiles) WHERE mol IS NULL;"
+      - "UPDATE public.molecule SET morganbv = morganbv_fp(mol) WHERE mol IS NOT NULL AND morganbv IS NULL;"
+      - "UPDATE public.molecule SET molecular_weight = mol_amw(mol) WHERE molecular_weight IS NULL;"
+
+  - name: public.conformer
+    csv_path: /scratch/Unactivated_Primary_Alkyl_Bromides_MolSSI_Library_Files/conformers.csv
+    columns:
+      - molecule_id
+      - elements
+      - positions
+      - basis
+      - program
+      - method
+      - cluster
+    pre_sql:
+      - "ALTER TABLE IF EXISTS public.conformer ADD COLUMN IF NOT EXISTS positions text;"
+
+  - property_set: dft
+    csv_path: /scratch/Unactivated_Primary_Alkyl_Bromides_MolSSI_Library_Files/dft_data.csv
+    post_sql:
+      - "ANALYZE public.dft_data;"
+
+post_import_sql:
+  - "ANALYZE;"
