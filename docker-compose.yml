@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  unactivated-primary-alkyl-bromides_backend:
+    image: 'descriptor-backend:latest'
+    environment:
+      POSTGRES_SERVER: descriptor_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWD: 7^&dCU68i'wO
+      POSTGRES_DB: unactivated_primary_alkyl_bromides
+      API_PREFIX: unactivated-primary-alkyl-bromides
+    entrypoint: bash prestart.sh
+    networks:
+      - external_network
+      - descriptor-libraries-internal
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.descriptor_libraries-unactivated-primary-alkyl-bromides_backend.loadbalancer.server.port=8080
+      - "traefik.http.routers.descriptor_libraries-unactivated-primary-alkyl-bromides_backend.rule=(Host(`descriptor-libraries.molssi.org`) && PathPrefix(`/api/unactivated-primary-alkyl-bromides`))"
+      - traefik.http.routers.descriptor_libraries-unactivated-primary-alkyl-bromides_backend.entrypoints=websecure
+      - traefik.http.routers.descriptor_libraries-unactivated-primary-alkyl-bromides_backend.tls.certresolver=letsencrypt
+
+  unactivated-primary-alkyl-bromides_frontend:
+    image: 'descriptor-frontend:edges'
+    volumes:
+      - "./public:/app/public"
+    environment:
+      - VITE_BASE_URL=/unactivated-primary-alkyl-bromides
+    networks:
+      - external_network
+    entrypoint: ash renameBase.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.descriptor_libraries-frontend-unactivated-primary-alkyl-bromides.rule=(Host(`descriptor-libraries.molssi.org`) && PathPrefix(`/unactivated-primary-alkyl-bromides`))"
+      - "traefik.http.services.descriptor_libraries-frontend-unactivated-primary-alkyl-bromides.loadbalancer.server.port=3000"
+      - traefik.http.routers.descriptor_libraries-frontend-unactivated-primary-alkyl-bromides.entrypoints=websecure
+      - traefik.http.routers.descriptor_libraries-frontend-unactivated-primary-alkyl-bromides.tls.certresolver=letsencrypt
+
+networks:
+  external_network:
+    # external = handled outside of this docker compose
+    name: docker_main_net
+    external: true
+  descriptor-libraries-internal:
+    external: true
