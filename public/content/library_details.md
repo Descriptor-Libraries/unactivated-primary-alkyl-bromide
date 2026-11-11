@@ -1,7 +1,7 @@
 # Library Details
 
 ## Molecule Identification
-The initial library of primary alkyl bromides was selected from the Auto-QChem database developed by the Doyle Lab. After excluding benzylic, allylic, and propargylic bromides, a curated set of 887 structurally diverse and synthetically tractable primary alkyl bromides was obtained. This final collection represents a broad range of substitution patterns and functional group compatibility, ideal for cross-coupling reactivity studies.
+The initial library of primary alkyl bromides was selected from the Auto-QChem database developed by the Doyle Lab. After excluding alpha-carbonyl, benzylic, allylic, propargylic bromides, and alkyl bromides containing iodide, a curated set of 878 structurally diverse and synthetically tractable primary alkyl bromides was obtained. This final collection represents a broad range of substitution patterns and functional group compatibility, ideal for cross-coupling reactivity studies.
 
 ## Conformational Searching & Conformer Selection
 
@@ -18,7 +18,7 @@ From the DFT calculations, global, atomic, and bond-level properties were collec
 Atoms in the alkyl bromide functional group were consistently numbered as shown below, and the numbers are referenced in the descriptor names.
 
 <div class="centered-container">
-     <img src="unactivated_primary_alkyl_bromides_atom_numbering.png" alt="Alkyl Bromides Atom Numbering" class="responsive-image">
+     <img src="content/unactivated_primary_alkyl_bromides_atom_numbering.png" alt="Alkyl Bromides Atom Numbering">
 </div>
 
 The dynamic range of properties across the conformational ensemble of a single alkyl bromide was summarized by using five condensed measures for each of the properties.

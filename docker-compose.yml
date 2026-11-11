@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_SERVER: descriptor_database
       POSTGRES_USER: postgres
-      POSTGRES_PASSWD: 7^&dCU68i'wO
+      POSTGRES_PASSWD: "${POSTGRES_PASSWD:?is not set, expected from ../.env.secrets via the .env link in this folder}"
       POSTGRES_DB: unactivated_primary_alkyl_bromides
       API_PREFIX: unactivated-primary-alkyl-bromides
     entrypoint: bash prestart.sh
